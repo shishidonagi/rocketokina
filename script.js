@@ -8,7 +8,7 @@ window.onload = function () {
 
     const imgUrls = [];
     imgUrls.push("");
-    for (let i = 1; i <= 13; i++) {
+    for (let i = 1; i <= 15; i++) {
         const imgUrl = `image/image${i}.png`;
         imgUrls.push(imgUrl);
     }
@@ -28,18 +28,44 @@ window.onload = function () {
         let right = 0;
         let acc = 0;
         let height = 0;
-        let state = 0;
+        let state = 1;
 
         //グローバル変数終わり
         /////////////////////////////////////////////////
+
+        // startScene
+        const titleScene = new Scene();					//シーン作成
+		game.pushScene(titleScene);  					//mainSceneシーンオブジェクトを画面に設置
+		titleScene.backgroundColor = "black"; 			//mainSceneシーンの背景
+
+        const titleImg = new Sprite(400, 500);			//画像サイズ
+    	titleImg.moveTo(0, 0);							//位置
+	    titleImg.image = game.assets[imgUrls[14]];	//読み込む画像の相対パスを指定。　事前にgame.preloadしてないと呼び出せない
+	    titleScene.addChild(titleImg);	
+
+        const readme = new Sprite(350, 450);			//画像サイズ
+        readme.moveTo(400, 0);							//位置
+	    readme.image = game.assets[imgUrls[15]];	//読み込む画像の相対パスを指定。　事前にgame.preloadしてないと呼び出せない
+	    titleScene.addChild(readme);	
+
+        titleImg.ontouchend = function() {
+            readme.moveTo(25, 25);
+        };
+
+        readme.ontouchend = function() {
+            game.popScene(); //mainSceneシーンを外して
+            setMainScene(); // endSceneを呼び出す
+        };
+
+
 
         // mainSceneを画面にセットする関数
         const setMainScene = function () {
             const mainScene = new Scene(); //シーン作成
             game.pushScene(mainScene); //mainSceneシーンオブジェクトを画面に設置
             mainScene.backgroundColor = "grey"; //mainSceneシーンの背景は黒くした
-            const backImg = new Sprite(400, 500);			//画像サイズ
-	    	backImg.moveTo(0, 0);							//位置
+            const backImg = new Sprite(400, 1000);			//画像サイズ
+	    	backImg.moveTo(0, -500);							//位置
 		    backImg.image = game.assets[imgUrls[11]];	//読み込む画像の相対パスを指定。　事前にgame.preloadしてないと呼び出せない
 		    mainScene.addChild(backImg);	
 
@@ -52,7 +78,7 @@ window.onload = function () {
             height = 0;
             leftfiresize = 0.5;
             rightfiresize = 0.5;
-            state = 0;
+            state = 1;
             count = 0;
 
             //テキスト
@@ -71,7 +97,8 @@ window.onload = function () {
             //メインループ　ここに主要な処理をまとめて書こう
             mainScene.time = 0; //mainScene内で使用するカウント用変数
             mainScene.onenterframe = function () {
-                if(state == 1){
+
+                if(state == 2){
                 scoreText.text = "現在の高度：" + height + "km"; //テキストに文字表示 scoreは変数なので、ここの数字が増える
                 this.time++; //毎フレームカウントを１増やす
                 if (this.time >= 20 ) {
@@ -89,7 +116,7 @@ window.onload = function () {
                     meteors.push(meteor); //meteors（隕石管理用配列）に格納
                     meteor.onenterframe = function () {
                         //隕石の動作
-                        if(state == 1){
+                        if(state == 2){
                             this.y += (3 + 10*meteor.x%5); //下に降りる
                             if (this.y >= 500) {
                             //画面下に入ったら
@@ -108,8 +135,13 @@ window.onload = function () {
                     };
                 }
                 }
-                if(state==1){
+                if(state == 2){
                 height ++;
+                if(backImg.y == 0){
+                    backImg.y = -500;
+                }else{
+                    backImg.y ++;
+                };
                 };
             };
 
@@ -143,7 +175,7 @@ window.onload = function () {
             
             okina.onenterframe = function () {
 
-                if(state == 0){
+                if(state == 1){
                     if(this.y > 300){
                         this.y -= 10;
                         leftfire.tl.scaleTo(leftfiresize,leftfiresize,0);
@@ -152,11 +184,11 @@ window.onload = function () {
                         rightfire.y = this.y+50;
                         underfire.y = this.y+100;
                     }else{
-                        state = 1;
+                        state = 2;
                     }
                 }
 
-                if(state == 1){
+                if(state == 2){
                 //左ボタン
     	    	const leftbutton = new Sprite(60, 60);			//画像サイズ
 	        	leftbutton.moveTo(40, 420);						//ボタンの位置
@@ -264,7 +296,7 @@ window.onload = function () {
                             // 最後フレームまで表示したら画面から消滅する
                             else this.frame++; //そうでなかったら、フレームを１増やす
                         };
-                        state = 2;
+                        state = 3;
                         //game.popScene(); //mainSceneシーンを外して
                         //setEndScene(); // endSceneを呼び出す
                         
@@ -278,7 +310,7 @@ window.onload = function () {
 
 
                 
-                if(state == 2){
+                if(state == 3){
                     if(count == 30){
                         game.popScene(); //mainSceneシーンを外して
                         setEndScene(); // endSceneを呼び出す
@@ -309,10 +341,10 @@ window.onload = function () {
 
             //GAMEOVERというテキスト
             const gameoverText = new Label(); //テキストはLabelクラス
-            gameoverText.font = "20px Meiryo"; //フォントはメイリオ 20px 変えたかったらググってくれ
+            gameoverText.font = "30px Meiryo"; //フォントはメイリオ 20px 変えたかったらググってくれ
             gameoverText.color = "rgba(255,255,255,1)"; //色　RGB+透明度　今回は白
             gameoverText.width = 400; //横幅指定　今回画面サイズ400pxなので、width:400pxだと折り返して二行目表示してくれる
-            gameoverText.moveTo(0, 30); //移動位置指定
+            gameoverText.moveTo(20, 300); //移動位置指定
             endScene.addChild(gameoverText); //S_ENDシーンにこの画像を埋め込む
 
             //リトライボタン
@@ -337,7 +369,7 @@ window.onload = function () {
                 //tweetBtnボタンをタッチした（タッチして離した）時にこの中の内容を実行する
                 //ツイートＡＰＩに送信
                 //結果ツイート時にURLを貼るため、このゲームのURLをここに記入
-                const url = encodeURI("https://twitter.com/hothukurou"); //きちんとURLがツイート画面に反映されるようにエンコードする
+                const url = encodeURI("shishidonagi.github.io/rocketokina/"); //きちんとURLがツイート画面に反映されるようにエンコードする
                 window.open("http://twitter.com/intent/tweet?text=今回の到達高度は" + height + "km&hashtags=ロケット隠岐奈&url=" + url); //ハッシュタグにahogeタグ付くようにした。
             };
 
@@ -345,7 +377,7 @@ window.onload = function () {
         };
 
         // ゲーム最初はmainSceneを表示させたいので、setMainScene関数を呼び出す
-        setMainScene();
+        //setMainScene();
     };
     game.start();
 };
