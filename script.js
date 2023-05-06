@@ -100,6 +100,9 @@ window.onload = function () {
 
                 if(state == 2){
                 scoreText.text = "現在の高度：" + height + "km"; //テキストに文字表示 scoreは変数なので、ここの数字が増える
+                //leftText.text = "left：" + height + "km"; //テキストに文字表示 scoreは変数なので、ここの数字が増える
+                //rightText.text = "right：" + height + "km"; //テキストに文字表示 scoreは変数なので、ここの数字が増える
+
                 this.time++; //毎フレームカウントを１増やす
                 if (this.time >= 20 ) {
                     //カウントが６０-scoreを超えたら
@@ -111,7 +114,7 @@ window.onload = function () {
                     meteor.x = Math.random() * 336; //出現X座標
                     meteor.tl.scaleTo(0.5+meteor.x%4/3,0.5+meteor.x%4/3,0); //ランダムにサイズを変更
                     meteor.id = new Date().getTime().toString(16) + Math.random().toString(16); // bombに乱数と時刻を用いたユニークな固有idを代入する(uuidといいます)
-                    mainScene.addChild(meteor); //mainSceneシーンに追加
+                    mainScene.insertBefore(meteor,leftbutton); //mainSceneシーンに追加
                     meteor.number = meteors.length; //自分がmeteorsのどこにいるか覚えておく(削除するときに使う)
                     meteors.push(meteor); //meteors（隕石管理用配列）に格納
                     meteor.onenterframe = function () {
@@ -172,6 +175,17 @@ window.onload = function () {
             okina.image = game.assets[imgUrls[3]]; //自機画像
             okina.moveTo(150, 500); //自機の位置
             mainScene.addChild(okina); //mainSceneシーンに貼る
+
+            //左ボタン
+   	    	const leftbutton = new Sprite(60, 60);			//画像サイズ
+        	leftbutton.moveTo(40, 420);						//ボタンの位置
+        	leftbutton.image = game.assets[imgUrls[7]];	//読み込む画像の相対パスを指定
+    	    mainScene.addChild(leftbutton);					//mainSceneにこの画像を貼り付ける
+            //右ボタン
+        	const rightbutton = new Sprite(60, 60);			//画像サイズ
+        	rightbutton.moveTo(300, 420);						//ボタンの位置
+        	rightbutton.image = game.assets[imgUrls[8]];	//読み込む画像の相対パスを指定
+        	mainScene.addChild(rightbutton);					//mainSceneにこの画像を貼り付ける
             
             okina.onenterframe = function () {
 
@@ -189,16 +203,7 @@ window.onload = function () {
                 }
 
                 if(state == 2){
-                //左ボタン
-    	    	const leftbutton = new Sprite(60, 60);			//画像サイズ
-	        	leftbutton.moveTo(40, 420);						//ボタンの位置
-	        	leftbutton.image = game.assets[imgUrls[7]];	//読み込む画像の相対パスを指定
-	    	    mainScene.addChild(leftbutton);					//mainSceneにこの画像を貼り付ける
-                //右ボタン
-	        	const rightbutton = new Sprite(60, 60);			//画像サイズ
-	        	rightbutton.moveTo(300, 420);						//ボタンの位置
-	        	rightbutton.image = game.assets[imgUrls[8]];	//読み込む画像の相対パスを指定
-	        	mainScene.addChild(rightbutton);					//mainSceneにこの画像を貼り付ける
+                
 
                 leftfire.tl.scaleTo(leftfiresize,leftfiresize,0);
                 rightfire.tl.scaleTo(rightfiresize,rightfiresize,0);
@@ -232,9 +237,7 @@ window.onload = function () {
                 if (right == 1){
                     if (this.x >= 10) {
                         acc -= 0.7;
-                        //if(rightfiresize < 1){
 						rightfiresize = 1;
-						//};
                     }else{
                         acc = 0;                        
                     };
@@ -301,7 +304,7 @@ window.onload = function () {
                     const bombCenter = { x: this.x + 50, y: this.y + 50 }; // 隠岐奈の中心点
                     const meteorCenter = { x: meteor.x + 32, y: meteor.y + 32 }; // 隕石の中心点
                     const distance = Math.sqrt((bombCenter.x - meteorCenter.x) ** 2 + (bombCenter.y - meteorCenter.y) ** 2); // 二点の距離を三平方の定理から求めている
-                    if (distance < hitDistance - 40) {
+                    if (distance < hitDistance - 140) {
                         // 当たり判定  二点の距離が二円の半径の和より短ければその円は衝突している
                         
                         state = 3;
@@ -359,9 +362,7 @@ window.onload = function () {
                     };
                 };                
                 
-            };
-
-            
+            };            
 
             game.pushScene(mainScene); //mainSceneを画面に貼り付ける
         };
