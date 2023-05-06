@@ -263,6 +263,7 @@ window.onload = function () {
 
                 //　移動ここまで
 
+                if (state >= 1 && state <= 2 ){
                 if (this.frame == 7) {
                     this.frame = 0;
                     underfire.frame = 0;
@@ -275,9 +276,25 @@ window.onload = function () {
                     leftfire.frame++;
                     rightfire.frame++;
                 };
+                };
 
-                for (const meteor of meteors) {
-                    // 隠岐奈と全隕石で円衝突の当たり判定を行う
+                if (state == 3){
+                    if (this.frame == 15) {
+                        this.frame = 8;
+                        underfire.x = 400;
+                        leftfire.x = 400;
+                        rightfire.x = 400;
+                            //フレームを動かす処理
+                    } else {
+                        this.frame++; //もし3フレーム以内なら次のフレームを表示
+                        underfire.x = 400;
+                        leftfire.x = 400;
+                        rightfire.x = 400;
+                    };
+                }
+
+
+                for (const meteor of meteors) {           // 隠岐奈と全隕石で円衝突の当たり判定を行う
                     // 円衝突は、二円の中心の距離が一定以下かどうかで判定する
                     // 隠岐奈、隕石は正方形、この正方形の内接円で当たり判定を行う
                     const hitDistance = this.width / 2 + meteor.width*(0.5+meteor.x%4/3) / 2; // ２円の半径を足した値を衝突チェックに使用する
@@ -286,16 +303,7 @@ window.onload = function () {
                     const distance = Math.sqrt((bombCenter.x - meteorCenter.x) ** 2 + (bombCenter.y - meteorCenter.y) ** 2); // 二点の距離を三平方の定理から求めている
                     if (distance < hitDistance - 40) {
                         // 当たり判定  二点の距離が二円の半径の和より短ければその円は衝突している
-                        const effect = new Sprite(16, 16); //爆発エフェクト
-                        effect.moveTo(this.x, this.y); //隠岐奈と同じ位置に爆発エフェクトを設置
-                        mainScene.addChild(effect); //mainSceneシーンに表示
-                        effect.image = game.assets[imgUrls[6]]; //爆発画像
-                        effect.onenterframe = function () {
-                            // 爆発は毎フレームで画像を切り替えるの絵処理している
-                            if (this.frame >= 5) this.parentNode.removeChild(this);
-                            // 最後フレームまで表示したら画面から消滅する
-                            else this.frame++; //そうでなかったら、フレームを１増やす
-                        };
+                        
                         state = 3;
                         //game.popScene(); //mainSceneシーンを外して
                         //setEndScene(); // endSceneを呼び出す
@@ -305,20 +313,55 @@ window.onload = function () {
                         //underfire.parentNode.removeChild(underfire); //thisは隠岐奈なので、隠岐奈を消す
                         //meteors = meteors.filter((m) => m.id !== meteor.id); // meteorsという配列に今回削除したmeteorを消した配列を再代入する
                         //return;
+
+                        
+
+
+                        
                     }
+
+                    
                 }
 
-
-                
                 if(state == 3){
-                    if(count == 30){
+
+                    //const effect = new Sprite(16, 16); //爆発エフェクト
+                    //effect.image = game.assets[imgUrls[6]]; //爆発画像
+                    //effect.moveTo(okina.x+50, okina.y+50); //隠岐奈と同じ位置に爆発エフェクトを設置
+                    //mainScene.addChild(effect); //mainSceneシーンに表示
+                    //effect.onenterframe = function () {
+                        // 爆発は毎フレームで画像を切り替えるの絵処理している
+                    //    if (this.frame >= 5) this.x = 400;
+                        // 最後フレームまで表示したら画面から消滅する
+                    //    else this.frame++; //そうでなかったら、フレームを１増やす
+                    //};
+
+                    if(count == 40){
                         game.popScene(); //mainSceneシーンを外して
                         setEndScene(); // endSceneを呼び出す
                     }else{
                         count++;
+                    //    if (count%4 == 0){
+                    //    okina.x +=6;
+                    //    }
+                    //    if (count%4 == 1){
+                    //    okina.x -=6;
+                    //    okina.y -=6;
+                    //    }
+                    //    if (count%4 == 2){
+                    //    okina.x +=6;
+                    //    }
+                    //    if (count%4 == 3){
+                    //    okina.x -=6;
+                    //    okina.y +=6;
+                    //    }
+
                     };
-                };
+                };                
+                
             };
+
+            
 
             game.pushScene(mainScene); //mainSceneを画面に貼り付ける
         };
