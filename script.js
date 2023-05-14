@@ -14,6 +14,13 @@ window.onload = function () {
     }
     game.preload(imgUrls);
 
+    //BGM読み込み
+	const BGMUrl = "sound/BGM.wav";						//game.htmlからの相対パス
+	game.preload([BGMUrl]); 				//データを読み込んでおく
+
+    const damageUrl = "sound/damage.wav";						//game.htmlからの相対パス
+	game.preload([damageUrl]); 				//データを読み込んでおく
+
     //読み込み終わり
     /////////////////////////////////////////////////
 
@@ -29,6 +36,7 @@ window.onload = function () {
         let acc = 0;
         let height = 0;
         let state = 1;
+        let bgm = 0;
 
         //グローバル変数終わり
         /////////////////////////////////////////////////
@@ -80,6 +88,7 @@ window.onload = function () {
             rightfiresize = 0.5;
             state = 1;
             count = 0;
+            bgm = 0;
 
             //テキスト
             const scoreText = new Label(); //テキストはLabelクラス
@@ -98,10 +107,23 @@ window.onload = function () {
             mainScene.time = 0; //mainScene内で使用するカウント用変数
             mainScene.onenterframe = function () {
 
+                if(state == 1 || state == 2){
+                    if(bgm < 2000){
+                        game.assets[BGMUrl].play();
+                        bgm += 1;           
+                        if(bgm == 2000){
+                            bgm = 0;
+                        };
+                    };
+                }
+
                 if(state == 2){
                 scoreText.text = "現在の高度：" + height + "km"; //テキストに文字表示 scoreは変数なので、ここの数字が増える
                 //leftText.text = "left：" + height + "km"; //テキストに文字表示 scoreは変数なので、ここの数字が増える
                 //rightText.text = "right：" + height + "km"; //テキストに文字表示 scoreは変数なので、ここの数字が増える
+
+                
+                
 
                 this.time++; //毎フレームカウントを１増やす
                 if (this.time >= 20 ) {
@@ -203,7 +225,7 @@ window.onload = function () {
                 }
 
                 if(state == 2){
-                
+
 
                 leftfire.tl.scaleTo(leftfiresize,leftfiresize,0);
                 rightfire.tl.scaleTo(rightfiresize,rightfiresize,0);
@@ -304,7 +326,7 @@ window.onload = function () {
                     const bombCenter = { x: this.x + 50, y: this.y + 50 }; // 隠岐奈の中心点
                     const meteorCenter = { x: meteor.x + 32, y: meteor.y + 32 }; // 隕石の中心点
                     const distance = Math.sqrt((bombCenter.x - meteorCenter.x) ** 2 + (bombCenter.y - meteorCenter.y) ** 2); // 二点の距離を三平方の定理から求めている
-                    if (distance < hitDistance - 40) {
+                    if (distance < hitDistance - 1000) {
                         // 当たり判定  二点の距離が二円の半径の和より短ければその円は衝突している
                         
                         state = 3;
@@ -328,6 +350,13 @@ window.onload = function () {
 
                 if(state == 3){
 
+                    game.assets[BGMUrl].pause();
+                    game.assets[BGMUrl].currentTime = 0;
+
+                    if(count == 0 || count == 8 || count == 16 || count == 24 || count == 32){
+                    game.assets[damageUrl].clone().play();
+                    }
+
                     //const effect = new Sprite(16, 16); //爆発エフェクト
                     //effect.image = game.assets[imgUrls[6]]; //爆発画像
                     //effect.moveTo(okina.x+50, okina.y+50); //隠岐奈と同じ位置に爆発エフェクトを設置
@@ -342,6 +371,7 @@ window.onload = function () {
                     if(count == 40){
                         game.popScene(); //mainSceneシーンを外して
                         setEndScene(); // endSceneを呼び出す
+                        
                     }else{
                         count++;
                     //    if (count%4 == 0){
@@ -401,6 +431,7 @@ window.onload = function () {
                 //retryBtnをタッチした（タッチして離した）時にこの中の内容を実行する
                 game.popScene(); //現在セットしているシーンを外す
                 setMainScene(); //メインシーンに移行する
+                bgm = 0;
             };
 
             //ツイートボタン
