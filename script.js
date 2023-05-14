@@ -177,12 +177,12 @@ window.onload = function () {
             mainScene.addChild(okina); //mainSceneシーンに貼る
 
             //左ボタン
-   	    	const leftbutton = new Sprite(60, 60);			//画像サイズ
-        	leftbutton.moveTo(40, 420);						//ボタンの位置
+   	    	const leftbutton = new Sprite(100, 80);			//画像サイズ
+        	leftbutton.moveTo(0, 420);						//ボタンの位置
         	leftbutton.image = game.assets[imgUrls[7]];	//読み込む画像の相対パスを指定
     	    mainScene.addChild(leftbutton);					//mainSceneにこの画像を貼り付ける
             //右ボタン
-        	const rightbutton = new Sprite(60, 60);			//画像サイズ
+        	const rightbutton = new Sprite(100, 80);			//画像サイズ
         	rightbutton.moveTo(300, 420);						//ボタンの位置
         	rightbutton.image = game.assets[imgUrls[8]];	//読み込む画像の相対パスを指定
         	mainScene.addChild(rightbutton);					//mainSceneにこの画像を貼り付ける
