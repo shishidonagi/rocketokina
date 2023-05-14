@@ -328,7 +328,7 @@ window.onload = function () {
                     const bombCenter = { x: this.x + 50, y: this.y + 50 }; // 隠岐奈の中心点
                     const meteorCenter = { x: meteor.x + 32, y: meteor.y + 32 }; // 隕石の中心点
                     const distance = Math.sqrt((bombCenter.x - meteorCenter.x) ** 2 + (bombCenter.y - meteorCenter.y) ** 2); // 二点の距離を三平方の定理から求めている
-                    if (distance < hitDistance - 1000) {
+                    if (distance < hitDistance - 40) {
                         // 当たり判定  二点の距離が二円の半径の和より短ければその円は衝突している
                         
                         state = 3;
