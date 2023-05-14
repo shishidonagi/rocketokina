@@ -111,10 +111,10 @@ window.onload = function () {
 		    if(bgm == 0){
                         game.assets[BGMUrl].play();
 		    };
-                    if(bgm < 3050){
+                    if(bgm < 3060){
 			bgm += 1;
                     };
-		    if(bgm == 3050){
+		    if(bgm == 3060){
 			bgm = 0;
 		    }
                 }
