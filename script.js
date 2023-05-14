@@ -108,10 +108,15 @@ window.onload = function () {
             mainScene.onenterframe = function () {
 
                 if(state == 1 || state == 2){
-                    if(bgm == 0){
+		    if(bgm == 0){
                         game.assets[BGMUrl].play();
-                        bgm = 1;
+		    };
+                    if(bgm < 3050){
+			bgm += 1;
                     };
+		    if(bgm == 3050){
+			bgm = 0;
+		    }
                 }
 
                 if(state == 2){
